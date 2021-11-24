@@ -1,9 +1,17 @@
 package it.unibo.oop.lab.mvc;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  * A very simple program using a graphical interface.
@@ -36,8 +44,10 @@ public final class SimpleGUI {
 
     /**
      * builds a new {@link SimpleGUI}.
+     * 
+     * @param controller
      */
-    public SimpleGUI() {
+    public SimpleGUI(final Controller controller) {
 
         /*
          * Make the frame half the resolution of the screen. This very method is
@@ -60,6 +70,57 @@ public final class SimpleGUI {
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
+
+        final JPanel panel = new JPanel(new BorderLayout());
+        final JPanel lowerPanel = new JPanel(new BorderLayout());
+        final JTextArea textArea = new JTextArea();
+        textArea.setEditable(false);
+        final JTextField textField = new JTextField();
+        final JButton print = new JButton("Print");
+        final JButton showHistory = new JButton("Show history");
+
+        print.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                controller.setNext(textField.getText());
+                controller.printCurr();
+            }
+
+        });
+
+        showHistory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                textArea.setText("");
+                for (final String s : controller.getHistory()) {
+                    textArea.append(s + "\n");
+                }
+            }
+
+        });
+
+        panel.add(textField, BorderLayout.NORTH);
+        panel.add(textArea, BorderLayout.CENTER);
+        lowerPanel.add(print, BorderLayout.CENTER);
+        lowerPanel.add(showHistory, BorderLayout.EAST);
+        panel.add(lowerPanel, BorderLayout.SOUTH);
+        frame.setContentPane(panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    /**
+     * Shows the GUI.
+     */
+    public void show() {
+        frame.setVisible(true);
+    }
+
+    /**
+     * 
+     * @param args
+     */
+    public static void main(final String[] args) {
+        final SimpleGUI gui = new SimpleGUI(new ControllerImpl());
+        gui.show();
+    }
 }

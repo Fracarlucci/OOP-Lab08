@@ -1,5 +1,9 @@
 package it.unibo.oop.lab.mvcio;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+
 /**
  * 
  */
@@ -27,5 +31,36 @@ public class Controller {
      * System.getProperty("file.separator"). The combined use of those methods leads
      * to a software that runs correctly on every platform.
      */
+    private static final String PATH = System.getProperty("user.home")
+            + System.getProperty("file.separator")
+            + "output.txt";
+    private File file = new File(PATH);
+
+    public void setCurrentFile() {
+        try {
+            if (file.exists()) {
+                file.createNewFile();
+            } else {
+
+            }
+        } catch (IOException e) {}
+    }
+
+    public File getCurrentFile() {
+        return file;
+    }
+
+    public String getPath() {
+        return PATH;
+    }
+
+    public void writeFile(String string) throws IOException{
+        try (PrintStream p = new PrintStream(file)){
+            p.println(string);
+        }
+        catch (IOException e) {
+            System.out.println("Errore durante la write!");
+        }
+    }
 
 }

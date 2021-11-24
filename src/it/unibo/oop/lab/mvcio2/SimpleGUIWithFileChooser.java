@@ -1,10 +1,30 @@
 package it.unibo.oop.lab.mvcio2;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import it.unibo.oop.lab.mvcio.Controller;
+
 /**
  * A very simple program using a graphical interface.
  * 
  */
 public final class SimpleGUIWithFileChooser {
+
+    private final JFrame frame = new JFrame("Applicazione utilissma 2");
 
     /*
      * TODO: Starting from the application in mvcio:
@@ -31,5 +51,76 @@ public final class SimpleGUIWithFileChooser {
      * update the UI: in this example the UI knows when should be updated, so
      * try to keep things separated.
      */
+
+    /**
+     * 
+     * @param c
+     */
+    public SimpleGUIWithFileChooser(final Controller c) {
+
+        final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        final int sw = (int) screen.getWidth();
+        final int sh = (int) screen.getHeight();
+        frame.setSize(sw / 2, sh / 2);
+
+        frame.setLocationByPlatform(true);
+
+        final JPanel panel = new JPanel(new BorderLayout());
+        final JPanel upperPanel = new JPanel(new BorderLayout());
+        final JTextArea text = new JTextArea();
+        final JTextField textField = new JTextField(c.getCurrentFile().getName());
+        textField.setEditable(false);
+        final JButton browse = new JButton("Browse");
+        final JButton save = new JButton("Save");
+
+        browse.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                    final JFileChooser chooser = new JFileChooser();
+                    final int res = chooser.showSaveDialog(null);
+                    if (res == JFileChooser.APPROVE_OPTION) {
+                        //???
+                    } else {
+                        JOptionPane.showMessageDialog(frame, new JLabel("an error has occurred"), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+            }
+        });
+
+        save.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                try {
+                    c.writeFile(text.getText());
+                } catch (IOException e1) {
+                    System.out.println("Errore durante il salvataggio del file!!");
+                    e1.printStackTrace();
+                }
+            }
+
+        });
+
+        panel.add(text, BorderLayout.CENTER);
+        panel.add(save, BorderLayout.SOUTH);
+        panel.add(upperPanel, BorderLayout.NORTH);
+        upperPanel.add(textField, BorderLayout.CENTER);
+        upperPanel.add(browse, BorderLayout.LINE_END);
+        frame.setContentPane(panel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    /**
+     * Shows the GUI.
+     */
+    public void show() {
+        frame.setVisible(true);
+    }
+
+    /**
+     * 
+     * @param args
+     */
+    public static void main(final String[] args) {
+        final SimpleGUIWithFileChooser gui = new SimpleGUIWithFileChooser(new Controller());
+        gui.show();
+    }
 
 }
