@@ -27,8 +27,6 @@ public final class SimpleGUIWithFileChooser {
     private final JFrame frame = new JFrame("Applicazione utilissma 2");
 
     /*
-     * TODO: Starting from the application in mvcio:
-     * 
      * 1) Add a JTextField and a button "Browse..." on the upper part of the
      * graphical interface.
      * Suggestion: use a second JPanel with a second BorderLayout, put the panel
@@ -76,11 +74,15 @@ public final class SimpleGUIWithFileChooser {
         browse.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
                     final JFileChooser chooser = new JFileChooser();
-                    final int res = chooser.showSaveDialog(null);
+                    final int res = chooser.showSaveDialog(frame);
                     if (res == JFileChooser.APPROVE_OPTION) {
-                        //???
-                    } else {
-                        JOptionPane.showMessageDialog(frame, new JLabel("an error has occurred"), "Error", JOptionPane.ERROR_MESSAGE);
+                        try {
+                            c.setCurrentFile(chooser.getSelectedFile());
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    } else if (res != JFileChooser.CANCEL_OPTION) {
+                        JOptionPane.showMessageDialog(frame, new JLabel("An error has occurred"), "Error", JOptionPane.ERROR_MESSAGE);
                     }
 
             }

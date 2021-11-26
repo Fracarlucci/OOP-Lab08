@@ -31,35 +31,49 @@ public class Controller {
      * System.getProperty("file.separator"). The combined use of those methods leads
      * to a software that runs correctly on every platform.
      */
-    private static final String PATH = System.getProperty("user.home")
+ 
+    private String path = System.getProperty("user.home")
             + System.getProperty("file.separator")
             + "output.txt";
-    private File file = new File(PATH);
+    private File file = new File(path);
 
-    public void setCurrentFile() {
-        try {
-            if (file.exists()) {
-                file.createNewFile();
-            } else {
-
-            }
-        } catch (IOException e) {}
+    /**
+     * 
+     * @param file to set as current
+     * @throws IOException 
+     */
+    public void setCurrentFile(final File file) throws IOException {
+        this.path  = file.getAbsolutePath();
+        this.file = new File(path);
     }
 
+    /**
+     * 
+     * @return the current file
+     */
     public File getCurrentFile() {
         return file;
     }
 
+    /**
+     * 
+     * @return the file path
+     */
     public String getPath() {
-        return PATH;
+        return path;
     }
 
-    public void writeFile(String string) throws IOException{
-        try (PrintStream p = new PrintStream(file)){
+    /**
+     * 
+     * @param string to print
+     * @throws IOException
+     */
+    public void writeFile(final String string) throws IOException {
+        try (PrintStream p = new PrintStream(file)) {
             p.println(string);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Errore durante la write!");
+            e.printStackTrace();
         }
     }
 
