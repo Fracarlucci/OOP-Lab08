@@ -78,6 +78,7 @@ public final class SimpleGUIWithFileChooser {
                     if (res == JFileChooser.APPROVE_OPTION) {
                         try {
                             c.setCurrentFile(chooser.getSelectedFile());
+                            textField.setText(c.getCurrentFile().getName());
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
